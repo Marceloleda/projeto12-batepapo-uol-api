@@ -58,8 +58,20 @@ api.post("/participants", async (req, res)=>{
     res.status(409).send(error);
     return 
   }
+  const today=new Date();
+  const h= today.getHours();
+  const m= today.getMinutes();
+  const s= today.getSeconds();
   
   try{
+    const {from, to, text, type, time} = req.body;
+    await db.collection("participante").insertOne({
+      from, 
+      to, 
+      text, 
+      type, 
+      time: `${h}:${m}:${s}`
+    })
     const tempo = Date.now();
     await db.collection("participantes").insertOne({
       name,
@@ -96,7 +108,7 @@ api.get("/messages", async (req, res)=>{
     type
   })
   const validate = textSchema.validate(req.body);
-  
+ 
   try{
 
     const user = req.headers;
